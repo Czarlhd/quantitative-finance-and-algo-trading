@@ -25,6 +25,8 @@ def download_data():
         ticker = yf.Ticker(stock)
         stock_data[stock] = ticker.history(start=start_date, end=end_date)["Close"]
 
+    print(stock_data)
+
     return pd.DataFrame(stock_data)
 
 
@@ -45,15 +47,12 @@ def show_statistics(returns):
     print(returns.cov() * NUM_TRADING_DAYS)
 
 
-def show_mean_variance(returns, weights):
+def get_mean_variance(returns, weights):
     # We are after the annual return
     portfolio_return = np.sum(returns.mean() * weights) * NUM_TRADING_DAYS
     portfolio_volatility = np.sqrt(
         np.dot(weights.T, np.dot(returns.cov() * NUM_TRADING_DAYS, weights))
     )
-
-    # print("Expected portfolio mean (return): ", portfolio_return)
-    # print("Expected portfolio volatility (standard deviation): ", portfolio_volatility)
 
     return portfolio_return, portfolio_volatility
 
@@ -78,7 +77,7 @@ def generate_portfolios(returns):
         w /= np.sum(w)
         portfolio_weights.append(w)
 
-        mean, risk = show_mean_variance(returns, w)
+        mean, risk = get_mean_variance(returns, w)
 
         portfolio_means.append(mean)
         portfolio_risks.append(risk)
@@ -91,7 +90,7 @@ def generate_portfolios(returns):
 
 
 def statistics(weights, returns):
-    portfolio_return, portfolio_volatility = show_mean_variance(returns, weights)
+    portfolio_return, portfolio_volatility = get_mean_variance(returns, weights)
 
     return np.array(
         [
