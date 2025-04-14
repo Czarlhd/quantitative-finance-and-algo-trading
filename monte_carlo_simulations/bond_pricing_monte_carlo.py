@@ -27,6 +27,9 @@ def monte_carlo_simulation(x, r0, kappa, theta, sigma, T=1.0):
     simulation_data = pd.DataFrame(result)
     simulation_data = simulation_data.T
 
+    plt.plot(simulation_data)
+    plt.show()
+
     # calculate the integral of the r(t) based on the simulated paths
     integral_sum = simulation_data.sum() * dt
     # present value of a future cash flow
